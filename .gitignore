@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.test-build/
+
+# Kurulum kilavuzu: icinde kurulum sifresi ve sifreleme anahtari var,
+# depoya girmemeli.
+KURULUM-KILAVUZU.md

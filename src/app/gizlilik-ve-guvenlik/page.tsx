@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-lg font-semibold text-slate-800 mb-2">Ödeme Güvenliği ve SSL</h2>
           <p>
-            Sitemiz 256-bit SSL güvenlik sertifikası ile korunmaktadır. Kredi kartı ve banka kartı ödemeleri BDDK lisanslı <strong>iyzico</strong> ödeme altyapısı üzerinden 3D Secure güvencesiyle gerçekleştirilir. Kredi kartı bilgileriniz sunucularımızda asla saklanmaz.
+            Sitemiz 256-bit SSL güvenlik sertifikası ile korunmaktadır. Kredi kartı ve banka kartı ödemeleri BDDK lisanslı <strong>PayTR</strong> ödeme altyapısı üzerinden 3D Secure güvencesiyle gerçekleştirilir. Kredi kartı bilgileriniz sunucularımızda asla saklanmaz.
           </p>
         </section>
 

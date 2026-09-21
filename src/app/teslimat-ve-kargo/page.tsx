@@ -8,7 +8,7 @@ export default function ShippingInfoPage() {
         <section>
           <h2 className="text-lg font-semibold text-slate-800 mb-2">Sipariş Hazırlık ve Teslim Süresi</h2>
           <p>
-            Hafta içi saat 15:00'e kadar verilen siparişler aynı gün veya en geç 1-2 iş günü içerisinde özenle paketlenerek anlaşmalı kargo firmasına teslim edilir.
+            Hafta içi saat 15:00’e kadar verilen siparişler aynı gün veya en geç 1-2 iş günü içerisinde özenle paketlenerek anlaşmalı kargo firmasına teslim edilir.
           </p>
         </section>
 

@@ -29,7 +29,7 @@ export default function CancellationReturnPage() {
         <section>
           <h2 className="text-lg font-semibold text-slate-800 mb-2">Geri Ödeme Süreci</h2>
           <p>
-            İadesi onaylanan siparişlerin ücreti, ödeme yönteminize bağlı olarak 3-7 iş günü içerisinde iyzico altyapısı üzerinden kartınıza yansıtılır.
+            İadesi onaylanan siparişlerin ücreti, ödeme yönteminize bağlı olarak 3-7 iş günü içerisinde PayTR altyapısı üzerinden kartınıza yansıtılır.
           </p>
         </section>
       </div>

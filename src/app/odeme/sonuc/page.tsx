@@ -1,17 +1,25 @@
 // src/app/odeme/sonuc/page.tsx
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
 
 function SonucContent() {
   const searchParams = useSearchParams();
-  const status = searchParams.get('status');
-  const orderId = searchParams.get('orderId');
+  const { clearCart } = useCart();
+  // PayTR 'durum' ve 'oid' ile doner, eski akis 'status' ve 'orderId' kullaniyordu.
+  const status = searchParams.get('durum') || searchParams.get('status');
+  const orderId = searchParams.get('oid') || searchParams.get('orderId');
   const message = searchParams.get('message');
 
-  const isSuccess = status === 'success';
+  const isSuccess = status === 'success' || status === 'basarili';
+
+  // Odeme tamamlandiysa sepet burada temizlenir, odeme oncesinde degil.
+  useEffect(() => {
+    if (isSuccess && clearCart) clearCart();
+  }, [isSuccess, clearCart]);
 
   return (
     <div className="min-h-screen bg-[#fcfaf7] flex items-center justify-center px-4 py-12">
@@ -25,7 +33,7 @@ function SonucContent() {
             </div>
             <h2 className="text-2xl font-serif font-bold text-neutral-900 mb-2">Siparişiniz Alındı!</h2>
             <p className="text-neutral-600 text-sm mb-6">
-              Siparişiniz başarıyla oluşturuldu. Sipariş detayları ve faturanız e-posta adresinize gönderildi.
+              Ödemeniz alındı. Sipariş detayları e-posta adresinize gönderilecek.
             </p>
             {orderId && (
               <div className="bg-neutral-50 p-4 rounded-xl mb-6">

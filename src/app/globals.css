@@ -33,3 +33,82 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* ============================================================
+   YENI ANA SAYFA (ornek tasarim, /yeni adresinde)
+   Butun belirtecler .yeni-kok altina kapatildi; canli sayfalara
+   hicbir etkisi yoktur. Musteri onaylarsa bu blok koke tasinir.
+   Cizgi: Apple. Notr zemin, tek vurgu rengi, kil payi cizgiler,
+   bol hava. Altin yok, gradyan sus yok, parilti yok, italik yok.
+   ============================================================ */
+.yeni-kok {
+  /* Acik mod */
+  --y-zemin: #fbfbfd;        /* neredeyse beyaz */
+  --y-yuzey: #ffffff;
+  --y-yuzey-2: #f4f4f7;
+  --y-murekkep: #0f172a;     /* marka lacivert, metin rengi */
+  --y-ikincil: #5b6472;      /* yardimci metin, AA gecer */
+  --y-cizgi: rgba(15, 23, 42, 0.10);
+  --y-cizgi-guclu: rgba(15, 23, 42, 0.16);
+  --y-vurgu: #0369a1;        /* marka mavisinin koyu tonu, beyazda AA */
+  --y-vurgu-zemin: rgba(3, 105, 161, 0.08);
+  --y-ters-zemin: #0f172a;   /* koyu blok bolumu */
+  --y-ters-murekkep: #f8fafc;
+  --y-ters-ikincil: #97a3b6;
+  --y-ters-cizgi: rgba(248, 250, 252, 0.14);
+  --y-golge: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --y-golge-kalkik: 0 2px 4px rgba(15, 23, 42, 0.05), 0 16px 40px rgba(15, 23, 42, 0.10);
+  /* Tek kose yaricapi olcegi: yumusak sistem */
+  --y-r-kucuk: 10px;
+  --y-r-orta: 16px;
+  --y-r-buyuk: 22px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .yeni-kok {
+    --y-zemin: #0b0d10;
+    --y-yuzey: #15181d;
+    --y-yuzey-2: #1b1f26;
+    --y-murekkep: #f2f4f7;
+    --y-ikincil: #9aa3af;
+    --y-cizgi: rgba(242, 244, 247, 0.12);
+    --y-cizgi-guclu: rgba(242, 244, 247, 0.20);
+    --y-vurgu: #6cc2f5;      /* koyu zeminde AA gecen acik ton */
+    --y-vurgu-zemin: rgba(108, 194, 245, 0.12);
+    --y-ters-zemin: #05070a;
+    --y-ters-murekkep: #f2f4f7;
+    --y-ters-ikincil: #8d97a6;
+    --y-ters-cizgi: rgba(242, 244, 247, 0.12);
+    --y-golge: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.45);
+    --y-golge-kalkik: 0 2px 4px rgba(0, 0, 0, 0.55), 0 16px 40px rgba(0, 0, 0, 0.55);
+  }
+}
+
+.yeni-kok {
+  background-color: var(--y-zemin);
+  color: var(--y-murekkep);
+}
+
+/* Apple cizgisinde baslik: iri, cok siki harf araligi, kisa satir yuksekligi */
+.y-baslik {
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  font-weight: 600;
+}
+.y-baslik-buyuk {
+  letter-spacing: -0.042em;
+  line-height: 1.02;
+  font-weight: 600;
+}
+
+/* Hareket azaltma tercihi: butun gecisler ve animasyonlar durur */
+@media (prefers-reduced-motion: reduce) {
+  .yeni-kok *,
+  .yeni-kok *::before,
+  .yeni-kok *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

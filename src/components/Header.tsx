@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
@@ -19,9 +20,14 @@ export default function Header() {
     { name: 'Doğal Ürünler', href: '/kategori/dogal-urunler' },
   ];
 
+  // /yeni ornek tasarim sayfasi kendi ust menusunu kullanir, bu yuzden orada
+  // bu serit gizlenir. Sepet cekmecesi gizlenmez, calismaya devam eder.
+  const yeniTasarimSayfasi = Boolean(pathname?.startsWith('/yeni'));
+
   return (
     <>
       {/* Ana Header */}
+      {!yeniTasarimSayfasi && (
       <header className="sticky top-0 z-40 bg-brand-neutral/80 backdrop-blur-xl border-b border-brand-navy/5 transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
@@ -107,6 +113,7 @@ export default function Header() {
           </div>
         )}
       </header>
+      )}
 
       {/* Sepet Çekmecesi (Drawer) */}
       {isCartOpen && (
@@ -153,9 +160,11 @@ export default function Header() {
                     cart.map((item) => (
                       <div key={item.id} className="group flex items-center gap-4 bg-white p-4 rounded-2xl border border-brand-navy/5 shadow-sm hover:shadow-md transition-all">
                         <div className="w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-brand-neutral border border-brand-navy/5">
-                          <img
+                          <Image
                             src={item.image}
                             alt={item.name}
+                            width={80}
+                            height={80}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           />
                         </div>

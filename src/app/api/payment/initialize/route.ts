@@ -1,25 +1,21 @@
+// src/app/api/payment/initialize/route.ts
+// KAPATILDI. Eski iyzico akisi. Odeme PayTR'ye tasindi.
+// Dosya git gecmisinde duruyor; onay verilirse tamamen silinebilir.
 import { NextResponse } from 'next/server';
-import { iyzico } from '@/lib/iyzico'; // <-- 'iyzipay' yerine 'iyzico'
 
-export async function POST(req: Request): Promise<Response> {
-  try {
-    const body = await req.json();
+export const dynamic = 'force-dynamic';
 
-    const result = await new Promise<any>((resolve, reject) => {
-      iyzico.checkoutFormInitialize.create(body, (err: any, result: any) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
+function kapali() {
+  return NextResponse.json(
+    { success: false, error: 'Bu rota kullanimdan kaldirildi.' },
+    { status: 410 }
+  );
+}
 
-    return NextResponse.json(result);
-  } catch (error: any) {
-    return NextResponse.json(
-      { status: 'failure', errorMessage: error?.message || 'Ödeme başlatılamadı.' },
-      { status: 500 }
-    );
-  }
+export async function GET() {
+  return kapali();
+}
+
+export async function POST() {
+  return kapali();
 }

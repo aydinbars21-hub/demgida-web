@@ -1,8 +1,8 @@
 // src/middleware.ts
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+// Istek nesnesine ihtiyac yok: bu ara katman yalnizca cikis basliklarini ekliyor.
+export function middleware() {
   const response = NextResponse.next();
 
   // Kurumsal Güvenlik Başlıkları (Security Headers)

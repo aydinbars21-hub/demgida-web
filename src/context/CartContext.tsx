@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 
 export interface CartItem {
   id: string;
@@ -29,11 +29,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // localStorage'dan sepeti yükleme
+  // İlk kaydetmeyi atlamak için. Aksi halde sayfa ilk açıldığında, kayıtlı
+  // sepet daha okunmadan boş dizi localStorage'a yazılıyor ve o anda sekme
+  // kapatılırsa müşterinin sepeti siliniyordu.
+  const ilkCalisma = useRef(true);
+
+  // localStorage'dan sepeti yükleme.
+  // Not: localStorage sunucuda yok, bu yüzden okuma ancak tarayıcıda, yani
+  // effect içinde yapılabilir. Lint kuralı burada kaçınılmaz olarak ihlal olur.
   useEffect(() => {
     try {
       const saved = localStorage.getItem("dem_cart");
       if (saved) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCart(JSON.parse(saved));
       }
     } catch (e) {
@@ -41,8 +49,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Sepet değiştikçe kaydetme
+  // Sepet değiştikçe kaydetme. İlk çalışma atlanır (yukarıdaki açıklama).
   useEffect(() => {
+    if (ilkCalisma.current) {
+      ilkCalisma.current = false;
+      return;
+    }
     try {
       localStorage.setItem("dem_cart", JSON.stringify(cart));
     } catch (e) {

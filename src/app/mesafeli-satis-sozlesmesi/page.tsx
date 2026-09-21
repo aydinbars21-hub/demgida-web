@@ -15,21 +15,21 @@ export default function DistanceSellingContractPage() {
         <section>
           <h2 className="text-lg font-semibold text-slate-800 mb-2">2. KONU</h2>
           <p>
-            İşbu sözleşmenin konusu, ALICI'nın SATICI'ya ait demgida.com internet sitesinden elektronik ortamda siparişini yaptığı ürünlerin satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği hükümleri gereğince tarafların hak ve yükümlülüklerinin saptanmasıdır.
+            İşbu sözleşmenin konusu, ALICI’nın SATICI’ya ait demgida.com internet sitesinden elektronik ortamda siparişini yaptığı ürünlerin satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği hükümleri gereğince tarafların hak ve yükümlülüklerinin saptanmasıdır.
           </p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-slate-800 mb-2">3. ÜRÜN VE TESLİMAT</h2>
           <p>
-            Satın alınan ürünlerin cinsi, miktarı, satış bedeli ve ödeme şekli sipariş özetinde belirtildiği gibidir. Ürünler ALICI'nın belirttiği adrese anlaşmalı kargo firması aracılığıyla gönderilir.
+            Satın alınan ürünlerin cinsi, miktarı, satış bedeli ve ödeme şekli sipariş özetinde belirtildiği gibidir. Ürünler ALICI’nın belirttiği adrese anlaşmalı kargo firması aracılığıyla gönderilir.
           </p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-slate-800 mb-2">4. CAYMA HAKKI VE İSTİSNALAR</h2>
           <p>
-            6502 sayılı Kanun ve Mesafeli Sözleşmeler Yönetmeliği'nin 15. maddesi uyarınca; çabuk bozulabilen, son kullanma tarihi geçme ihtimali olan veya ambalajı açıldıktan sonra sağlık ve hijyen açısından uygun olmayan gıda ve süt ürünlerinde cayma hakkı kullanılamaz. Ambalajı açılmamış, bozulmamış ve hasarsız ürünler için teslimat tarihinden itibaren 14 gün içinde cayma hakkı mevcuttur.
+            6502 sayılı Kanun ve Mesafeli Sözleşmeler Yönetmeliği’nin 15. maddesi uyarınca; çabuk bozulabilen, son kullanma tarihi geçme ihtimali olan veya ambalajı açıldıktan sonra sağlık ve hijyen açısından uygun olmayan gıda ve süt ürünlerinde cayma hakkı kullanılamaz. Ambalajı açılmamış, bozulmamış ve hasarsız ürünler için teslimat tarihinden itibaren 14 gün içinde cayma hakkı mevcuttur.
           </p>
         </section>
 

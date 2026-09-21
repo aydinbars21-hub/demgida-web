@@ -1,19 +1,19 @@
 // src/app/odeme/page.tsx
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useCart } from '@/context/CartContext';
+import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useCart, type CartItem } from '@/context/CartContext';
 
 export default function OdemePage() {
-  const router = useRouter();
-  const { cart, clearCart } = useCart();
+  const { cart } = useCart();
 
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     phone: '',
-    tcNo: '', // iyzico için zorunlu alan
+    tcNo: '', // istege bagli, PayTR zorunlu tutmuyor
     city: '',
     district: '',
     address: '',
@@ -21,17 +21,21 @@ export default function OdemePage() {
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [iframeUrl, setIframeUrl] = useState<string | null>(null);
+  const iframeAlani = useRef<HTMLDivElement | null>(null);
 
-  // Ara toplam hesaplama
-  const subtotal =
-    cart && cart.length > 0
-      ? cart.reduce((acc: number, item: any) => acc + Number(item.price || 0) * (item.quantity || 1), 0)
-      : 864;
+  // Sepet bosken eskiden uydurma bir urun (864 TL) gosteriliyor ve o tutar
+  // uzerinden odeme yapilabiliyordu. Artik bos sepet bos kabul edilir.
+  const sepetBos = !cart || cart.length === 0;
+
+  const subtotal = sepetBos
+    ? 0
+    : cart.reduce((acc: number, item: CartItem) => acc + Number(item.price || 0) * (item.quantity || 1), 0);
 
   // Kargo Ücreti Kuralı: 1000 TL ve üzeri ücretsiz, altı 150 TL
   const SHIPPING_FEE = 150;
   const FREE_SHIPPING_THRESHOLD = 1000;
-  const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+  const shippingCost = sepetBos || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
 
   // Toplam Tutar (Ara Toplam + Kargo)
   const grandTotal = subtotal + shippingCost;
@@ -46,67 +50,74 @@ export default function OdemePage() {
     setErrorMessage(null);
 
     try {
-      const orderItems =
-        cart && cart.length > 0
-          ? cart
-          : [
-              {
-                id: '1',
-                name: 'Etiyopya Yirgacheffe Filtre Kahve',
-                price: 864,
-                quantity: 1,
-                category: 'Kahve',
-              },
-            ];
+      if (sepetBos) {
+        throw new Error('Sepetiniz bos. Once urun ekleyin.');
+      }
+      const orderItems = cart;
 
-      // iyzico entegrasyonu için hazırladığımız api/checkout rotasına istek atıyoruz
-      const response = await fetch('/api/checkout', {
+      // PayTR iFrame API. Tutar sunucuda yeniden hesaplanir, buradan gonderilen
+      // toplam guvenilmez kabul edilir.
+      const response = await fetch('/api/odeme/paytr/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          cart: orderItems,
-          total: grandTotal, // Kargo dahil toplam tutar gönderiliyor
-          formData: {
-            name: formData.fullName,
-            email: formData.email,
-            phone: formData.phone,
-            tc_no: formData.tcNo,
-            address: `${formData.address}, ${formData.district} / ${formData.city}`,
-          },
+          email: formData.email,
+          ad: formData.fullName,
+          telefon: formData.phone,
+          adres: `${formData.address}, ${formData.district} / ${formData.city}`,
+          kargo: shippingCost,
+          sepet: orderItems.map((u: { name?: string; price?: number; quantity?: number }) => ({
+            ad: u.name,
+            fiyat: Number(u.price || 0),
+            adet: Number(u.quantity || 1),
+          })),
         }),
       });
 
       const data = await response.json();
 
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Ödeme başlatılamadı.');
+      if (!response.ok || !data.basarili || !data.iframeUrl) {
+        throw new Error(data.hata || 'Odeme baslatilamadi.');
       }
 
-      // Sepeti temizle
-      if (clearCart) clearCart();
-
-      // iyzico ödeme sayfasına yönlendir
-      if (data.paymentForm && data.paymentForm.paymentPageUrl) {
-        window.location.href = data.paymentForm.paymentPageUrl;
-      } else {
-        throw new Error('İyzico ödeme sayfası URL alınamadı.');
-      }
-
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Ödeme işlenirken bir hata oluştu.');
+      // Sepet burada temizlenmez. Odeme gercekten tamamlandiginda
+      // sonuc sayfasinda temizlenir.
+      setIframeUrl(data.iframeUrl);
+    } catch (err) {
+      setErrorMessage((err as Error).message || 'Odeme islenirken bir hata olustu.');
+    } finally {
       setLoading(false);
     }
   };
 
+  // PayTR cercevesini sayfa yuksekligine uyarlayan resmi betik.
+  useEffect(() => {
+    if (!iframeUrl) return;
+    const betik = document.createElement('script');
+    betik.src = 'https://www.paytr.com/js/iframeResizer.min.js';
+    betik.async = true;
+    betik.onload = () => {
+      const g = window as unknown as { iFrameResize?: (a: unknown, b: string) => void };
+      if (typeof g.iFrameResize === 'function') {
+        g.iFrameResize({}, '#paytriframe');
+      }
+    };
+    document.body.appendChild(betik);
+    iframeAlani.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return () => {
+      betik.remove();
+    };
+  }, [iframeUrl]);
+
   return (
     <div className="min-h-screen bg-[#fcfaf7] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Sol Kolon: Teslimat ve iyzico Bilgileri Formu */}
+        {/* Sol Kolon: Teslimat ve odeme bilgileri formu */}
         <div className="lg:col-span-7 bg-white p-8 rounded-2xl shadow-sm border border-neutral-100">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-serif font-bold text-neutral-900">Teslimat & Ödeme Bilgileri</h2>
-            <span className="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-medium">
-              iyzico Sandbox Modu
+            <span className="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-medium border border-emerald-200">
+              PayTR guvenli odeme
             </span>
           </div>
           <p className="text-neutral-500 text-sm mb-6">
@@ -123,6 +134,29 @@ export default function OdemePage() {
             </div>
           )}
 
+          {iframeUrl ? (
+            <div ref={iframeAlani}>
+              <p className="text-neutral-500 text-sm mb-4">
+                Kart bilgilerinizi asagidaki guvenli PayTR ekranina girin. Bu bilgiler bizim
+                sunucumuza hic ugramaz.
+              </p>
+              <iframe
+                src={iframeUrl}
+                id="paytriframe"
+                title="PayTR guvenli odeme"
+                frameBorder="0"
+                scrolling="no"
+                style={{ width: '100%', minHeight: '620px' }}
+              />
+              <button
+                type="button"
+                onClick={() => setIframeUrl(null)}
+                className="mt-4 text-xs text-neutral-500 underline"
+              >
+                Bilgileri duzenlemek icin geri don
+              </button>
+            </div>
+          ) : (
           <form onSubmit={handlePayment} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
@@ -172,12 +206,11 @@ export default function OdemePage() {
 
             <div>
               <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
-                TC Kimlik Numarası * <span className="text-[10px] text-neutral-400 lowercase">(iyzico doğrulaması için)</span>
+                TC Kimlik Numarası <span className="text-[10px] text-neutral-400 lowercase">(istege bagli)</span>
               </label>
               <input
                 type="text"
                 name="tcNo"
-                required
                 maxLength={11}
                 value={formData.tcNo}
                 onChange={handleChange}
@@ -234,30 +267,39 @@ export default function OdemePage() {
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full mt-6 bg-[#C49A6C] hover:bg-[#B3895B] text-white py-4 rounded-xl font-medium transition duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              disabled={loading || sepetBos}
+              className="w-full mt-6 bg-[#C49A6C] hover:bg-[#B3895B] text-white py-4 rounded-xl font-medium transition duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'iyzico Güvenli Ödeme Sayfasına Yönlendiriliyor...' : 'iyzico ile Güvenli Ödemeye Geç'}
+              {sepetBos
+                ? 'Sepetiniz boş'
+                : loading
+                ? 'Güvenli ödeme ekranı hazırlanıyor...'
+                : 'Güvenli ödemeye geç'}
             </button>
           </form>
+          )}
         </div>
 
         {/* Sağ Kolon: Sipariş Özeti */}
         <div className="lg:col-span-5">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-neutral-100 sticky top-6">
             <h3 className="text-xl font-serif font-bold text-neutral-900 mb-6">
-              Sipariş Özeti ({cart?.length || 1})
+              Sipariş Özeti ({cart?.length || 0})
             </h3>
 
-            {cart && cart.length > 0 ? (
-              cart.map((item: any, idx: number) => (
+            {!sepetBos ? (
+              cart.map((item: CartItem, idx: number) => (
                 <div key={idx} className="flex items-center gap-4 py-4 border-b border-neutral-100">
                   <div className="w-16 h-16 bg-neutral-100 rounded-lg overflow-hidden flex-shrink-0">
-                    <img
-                      src={item.image || '/products/yirgacheffe.png'}
-                      alt={item.name}
-                      className="w-full h-full object-cover"
-                    />
+                    {item.image ? (
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        width={64}
+                        height={64}
+                        className="w-full h-full object-contain"
+                      />
+                    ) : null}
                   </div>
                   <div className="flex-1">
                     <h4 className="font-medium text-neutral-900 text-sm">{item.name}</h4>
@@ -269,15 +311,14 @@ export default function OdemePage() {
                 </div>
               ))
             ) : (
-              <div className="flex items-center gap-4 py-4 border-b border-neutral-100">
-                <div className="w-16 h-16 bg-neutral-100 rounded-lg overflow-hidden flex-shrink-0">
-                  <img src="/products/yirgacheffe.png" alt="Kahve" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-medium text-neutral-900 text-sm">Etiyopya Yirgacheffe Filtre Kahve</h4>
-                  <p className="text-xs text-neutral-500">1000g · Adet: 1</p>
-                </div>
-                <span className="font-semibold text-sm text-neutral-900">864.00 TL</span>
+              <div className="py-8 text-center border-b border-neutral-100">
+                <p className="text-sm text-neutral-600 mb-4">Sepetiniz boş.</p>
+                <Link
+                  href="/"
+                  className="inline-block text-sm font-medium text-neutral-900 underline underline-offset-4"
+                >
+                  Ürünlere göz atın
+                </Link>
               </div>
             )}
 
@@ -308,7 +349,7 @@ export default function OdemePage() {
 
             <div className="mt-4 flex items-center justify-between text-xs text-neutral-400 border-t border-neutral-100 pt-4">
               <span>256-bit SSL Koruma</span>
-              <span>iyzico Güvencesi</span>
+              <span>PayTR güvencesi</span>
             </div>
           </div>
         </div>

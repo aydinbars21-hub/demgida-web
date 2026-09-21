@@ -1,5 +1,6 @@
 // src/app/page.tsx
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import Hero from '@/components/Hero';
 import ProductCard from '@/components/ProductCard';
@@ -123,9 +124,12 @@ export default function HomePage() {
             <div className="lg:col-span-6 relative">
               <AnimatedReveal width="100%" delay={0.3}>
                 <div className="relative rounded-[32px] overflow-hidden shadow-2xl border-8 border-white">
-                  <img
+                  <Image
                     src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=900&auto=format&fit=crop"
                     alt="Kahve Çekirdeği Hasadı ve Zanaat"
+                    width={900}
+                    height={675}
+                    sizes="(max-width: 1024px) 92vw, 540px"
                     className="w-full h-[450px] object-cover hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-transparent to-transparent flex items-end p-8">
@@ -161,7 +165,7 @@ export default function HomePage() {
                   <ShieldCheck size={24} />
                 </div>
                 <h4 className="text-sm font-black text-brand-navy uppercase tracking-tight">Güvenli Ödeme</h4>
-                <p className="text-[10px] font-bold text-brand-muted uppercase tracking-widest">%100 İyzico Güvencesi</p>
+                <p className="text-[10px] font-bold text-brand-muted uppercase tracking-widest">%100 PayTR Güvencesi</p>
               </div>
             </AnimatedReveal>
             <AnimatedReveal delay={0.3}>

@@ -16,10 +16,10 @@ export default function Footer() {
               <span className="font-extrabold text-xl font-serif text-[#FAEDCD]">DEM GIDA</span>
             </div>
             <p className="text-xs text-stone-300 leading-relaxed">
-              ERZİNCAN DEM GIDA İNŞAAT SANAYİ VE TİCARET LİMİTED ŞİRKETİ[cite: 1]
+              ERZİNCAN DEM GIDA İNŞAAT SANAYİ VE TİCARET LİMİTED ŞİRKETİ
             </p>
             <p className="text-xs text-stone-400">
-              <strong>Adres:</strong> Çarşı Mah. Kerkük Cad. No: 19 Merkez/Erzincan[cite: 1]
+              <strong>Adres:</strong> Çarşı Mah. Kerkük Cad. No: 19 Merkez/Erzincan
             </p>
             <p className="text-xs text-stone-400">
               <strong>E-posta:</strong> destek@demgida.com
@@ -53,12 +53,12 @@ export default function Footer() {
           <div className="space-y-3">
             <h3 className="font-semibold text-sm text-[#D4A373] mb-3">Güvenli Alışveriş</h3>
             <p className="text-xs text-stone-300">
-              Ödemeleriniz 256-bit SSL ve <strong>iyzico</strong> güvencesi altındadır.
+              Ödemeleriniz 256-bit SSL ve <strong>PayTR</strong> güvencesi altındadır.
             </p>
             <div className="flex items-center gap-2 pt-2 text-xs text-stone-400">
               <span className="px-2 py-1 bg-white/10 rounded font-semibold text-white">VISA</span>
               <span className="px-2 py-1 bg-white/10 rounded font-semibold text-white">Mastercard</span>
-              <span className="px-2 py-1 bg-white/10 rounded font-semibold text-white">iyzico</span>
+              <span className="px-2 py-1 bg-white/10 rounded font-semibold text-white">PayTR</span>
             </div>
           </div>
         </div>
@@ -69,7 +69,7 @@ export default function Footer() {
             © {new Date().getFullYear()} Dem Gıda İnş. San. ve Tic. Ltd. Şti. Tüm hakları saklıdır.
           </p>
           <p className="text-xs text-stone-400">
-            Vergi Dairesi: Fevzipaşa[cite: 1] | Vergi No: 3770988662[cite: 1]
+            Vergi Dairesi: Fevzipaşa | Vergi No: 3770988662
           </p>
         </div>
 

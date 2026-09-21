@@ -44,3 +44,6 @@ next-env.d.ts
 # Kurulum kilavuzu: icinde kurulum sifresi ve sifreleme anahtari var,
 # depoya girmemeli.
 KURULUM-KILAVUZU.md
+
+# Supabase gecici klasoru
+supabase/.temp/

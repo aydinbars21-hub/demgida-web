@@ -32,6 +32,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# Ornek dosya: gercek anahtar icermez, depoda dursun
+!.env.ornek
 
 # vercel
 .vercel
@@ -47,3 +49,7 @@ KURULUM-KILAVUZU.md
 
 # Supabase gecici klasoru
 supabase/.temp/
+
+# Teslim belgeleri: depo herkese acik, buraya girmesinler
+MUSTERIYE-PROMPT.md
+MUSTERI-KURULUM.md
